@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# Lint protobuf definitions.
+
+set -e
+set -u
+
+cd "$(git rev-parse --show-toplevel)/proto"
+
+proto_count=$(find . -name '*.proto' | wc -l)
+
+if test "${proto_count}" -eq 0 ; then
+	echo "W: no proto files found, nothing to lint."
+	exit 0
+fi
+
+# Verify that formatting the code doesn't introduce changes.
+if ! buf format --exit-code &> /dev/null ; then
+	echo "E: 'buf format' introduces changes, please run 'buf format -w' to examine and commit them. Stop."
+	exit 1
+fi
+
+find . -name '*.proto' -print0 |
+	xargs -r -0 -n1 dirname |
+	while read -r protodir ; do
+		# Check that are no breaking changes
+		if test -f "${protodir}/protodef.binpb" ; then
+			buf breaking . --against "${protodir}/protodef.binpb"
+		fi
+	done
+
+# Lint code.
+buf lint

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+go list -m -f '{{if not (or .Indirect .Main)}}{{.Path}}{{end}}' all

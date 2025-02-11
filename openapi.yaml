@@ -1,0 +1,392 @@
+openapi: 3.0.3
+info:
+  title: Grafana Secrets Manager API
+  description: |-
+    This is simple API to store and retrieve secrets. Note that common
+    operations are supported (add, update, delete list) as well as requesting
+    the plain text version of a secret. The operations are accessible based on
+    the scopes of the secret used to access the API.
+  termsOfService: https://grafana.com/legal/terms/
+  contact:
+    email: info@grafana.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+externalDocs:
+  description: External documentation for Grafana Cloud products
+  url: https://grafana.com/products/cloud/
+servers:
+  - url: https://gsm.grafana-dev.net/api/v1
+tags:
+  - name: secrets
+    description: Secrets management
+    externalDocs:
+      description: Documentation
+      url: https://grafana.com/products/cloud/
+paths:
+  /secrets:
+    get:
+      tags:
+        - secrets
+      summary: Retrieve all secrets
+      description: Returns a list of secrets
+      operationId: listSecrets
+      responses:
+        '200':
+          $ref: '#/components/responses/SecretsWithMetadata'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Not allowed
+      security:
+        - secret_auth: []
+    post:
+      tags:
+        - secrets
+      summary: Add a new secret
+      description: Add a new secret
+      operationId: addSecret
+      requestBody:
+        $ref: '#/components/requestBodies/Secret'
+      responses:
+        '201':
+          $ref: '#/components/responses/SecretWithMetadata'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Not allowed
+        '422':
+          description: Validation exception
+      security:
+        - secret_auth: []
+
+  /secrets/find_by_labels:
+    get:
+      tags:
+        - secrets
+      summary: Finds secrets by labels
+      description: Multiple labels can be provided with comma separated strings.
+      operationId: findSecretsByLabels
+      parameters: []
+      responses:
+        '200':
+          $ref: '#/components/responses/SecretsWithMetadata'
+        '400':
+          description: Invalid tag value
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Not allowed
+      security:
+        - secret_auth: []
+
+  /secrets/{id}:
+    get:
+      tags:
+        - secrets
+      summary: Find secret by ID
+      description: Returns a single secret
+      operationId: getSecretById
+      parameters:
+        - name: id
+          in: path
+          description: ID of secret to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SecretWithMetadata'
+        '400':
+          description: Invalid ID supplied
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Not allowed
+        '404':
+          description: Secret not found
+      security:
+        - secret_auth: []
+    put:
+      tags:
+        - secrets
+      summary: Update an existing secret
+      description: Update an existing secret by Id
+      operationId: updateSecret
+      requestBody:
+        $ref: '#/components/requestBodies/Secret'
+      parameters:
+        - name: id
+          in: path
+          description: ID of secret to update
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/SecretWithMetadata'
+        '400':
+          description: Invalid ID supplied
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Not allowed
+        '404':
+          description: Secret not found
+        '422':
+          description: Validation exception
+      security:
+        - secret_auth: []
+    delete:
+      tags:
+        - secrets
+      summary: Deletes a secret
+      description: delete a secret
+      operationId: deleteSecret
+      parameters:
+        - name: id
+          in: path
+          description: Secret id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SucessfulOperation'
+        '400':
+          description: Invalid secret value
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not allowed
+      security:
+        - secret_auth: []
+
+  /secrets/{id}/decrypt:
+    get:
+      tags:
+        - secrets
+      summary: Decrypt the specified secret
+      description: Returns the secret with the plaintext value set
+      operationId: decryptSecretById
+      parameters:
+        - name: id
+          in: path
+          description: ID of secret to decrypt
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/DecryptedSecret'
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not allowed
+        '404':
+          description: Secret not found
+      security:
+        - secret_auth: []
+
+
+components:
+  schemas:
+    CommonSecretProperties:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the secret. Immutable after creation.
+          example: my_secret
+          x-go-type-skip-optional-pointer: true
+        description:
+          type: string
+          example: My secret
+          description: The human readable description of the secret.
+          x-go-type-skip-optional-pointer: true
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+          description: Key-value pairs associated with the secret.
+          x-go-type-skip-optional-pointer: true
+          minItems: 0
+          maxItems: 10
+      required:
+        - name
+        - description
+        - labels
+
+    SecretMetadata:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: The unique ID of the secret.
+          example: '01543325-00b3-4f69-b124-51f54835a245'
+          x-go-type-skip-optional-pointer: true
+        org_id:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The ID of the organization the secret belongs to.
+          minimum: 1
+          maximum: 9223372036854775807
+          x-go-type-skip-optional-pointer: true
+        stack_id:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The ID of the stack the secret belongs to.
+          minimum: 1
+          maximum: 9223372036854775807
+          x-go-type-skip-optional-pointer: true
+        created_by:
+          type: string
+          readOnly: true
+          description: The ID of the user who created the secret.
+          x-go-type-skip-optional-pointer: true
+        created_at:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The timestamp of secret creation.
+          minimum: 0
+          maximum: 9223372036854775807
+          x-go-type-skip-optional-pointer: true
+        modified_at:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The timestamp of the last secret modification.
+          minimum: 0
+          maximum: 9223372036854775807
+          x-go-type-skip-optional-pointer: true
+      required:
+        - uuid
+        - org_id
+        - stack_id
+        - created_by
+        - created_at
+        - modified_at
+
+    Secret:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CommonSecretProperties'
+        - properties:
+            plaintext:
+              type: string
+              example: 'my secret value'
+              description: The secret value. Only used for creation and update, never returned.
+              writeOnly: true
+              x-go-type-skip-optional-pointer: false
+
+    SecretWithMetadata:
+      allOf:
+        - $ref: '#/components/schemas/CommonSecretProperties'
+        - $ref: '#/components/schemas/SecretMetadata'
+
+    DecryptedSecret:
+      allOf:
+        - $ref: '#/components/schemas/SecretWithMetadata'
+        - properties:
+            plaintext:
+              type: string
+              example: 'my secret value'
+              description: The secret value.
+              readOnly: true
+              x-go-type-skip-optional-pointer: true
+
+    Label:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the label.
+          example: 'team'
+        value:
+          type: string
+          description: The value of the label.
+          example: 'development'
+      required:
+        - name
+        - value
+
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation succeeded"
+        code:
+          type: string
+          enum:
+            - ok
+            - invalid_name
+            - invalid_label_name
+            - invalid_label_value
+      required:
+        - message
+        - code
+
+  requestBodies:
+    Secret:
+      description: An object containing the secret to be added or updated.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Secret'
+
+  responses:
+    SucessfulOperation:
+      description: A successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+    SecretWithMetadata:
+      description: A single secret with metadata
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SecretWithMetadata'
+
+    SecretsWithMetadata:
+      description: A single secret with metadata
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              secrets:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SecretWithMetadata'
+            required:
+              - secrets
+
+    DecryptedSecret:
+      description: A single secret with metadata and the secret value as plaintext.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DecryptedSecret'
+
+    UnauthorizedError:
+      description: Unauthorized
+
+  securitySchemes:
+    secret_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: Grafana Cloud

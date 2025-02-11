@@ -1,0 +1,331 @@
+enable:
+
+run:
+  deadline: 10m
+
+linters:
+  disable-all: true
+  enable:
+    # The following linters are enabled by default in golangci-lint
+ 
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+
+    # The following linters are disabled by default in golangci-lint
+
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - cyclop
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - err113
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exhaustruct
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
+    - funlen
+    - gocheckcompilerdirectives
+    - gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - goheader
+    - goimports
+    - gomoddirectives
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - importas
+    - inamedparam
+    - interfacebloat
+    - intrange
+    - ireturn
+    - lll
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - mnd
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnil
+    - nlreturn
+    - noctx
+    - nolintlint
+    #- nonamedreturns
+    - nosprintfhostport
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - tagalign
+    - tagliatelle
+    - tenv
+    - testableexamples
+    - testifylint
+    - thelper
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - varnamelen
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - wsl
+    - zerologlint
+
+    # The following linters are deprecated in golangci-lint.
+    #
+    # deadcode [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # execinquery [deprecated]: execinquery is a linter about query string checker in Query function which reads your Go src files and warning it finds [fast: false, auto-fix: false]
+    # exhaustivestruct [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # golint [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # gomnd [deprecated]: An analyzer to detect magic numbers. [fast: true, auto-fix: false]
+    # ifshort [deprecated]: Deprecated [fast: true, auto-fix: false]
+    # interfacer [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # maligned [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # nosnakecase [deprecated]: Deprecated [fast: true, auto-fix: false]
+    # scopelint [deprecated]: Deprecated [fast: true, auto-fix: false]
+    # structcheck [deprecated]: Deprecated [fast: false, auto-fix: false]
+    # varcheck [deprecated]: Deprecated [fast: false, auto-fix: false]
+
+linters-settings:
+  cyclop:
+    max-complexity: 15
+
+  depguard:
+    rules:
+      main:
+        list-mode: lax
+        files:
+          - $all
+        allow:
+          - $gostd
+        deny:
+          - pkg: "github.com/sirupsen/logrus"
+            desc: not allowed
+          - pkg: "github.com/pkg/errors"
+            desc: Should be replaced by standard lib errors package
+
+      test:
+        list-mode: lax
+        files:
+          - $test
+        allow:
+          - $gostd
+          - github.com/stretchr/testify/require
+        deny:
+          - pkg: "github.com/sirupsen/logrus"
+            desc: not allowed
+          - pkg: "github.com/pkg/errors"
+            desc: Should be replaced by standard lib errors package
+
+  exhaustruct:
+    exclude:
+      - github.com/prometheus/prometheus/prompb.Label
+      - github.com/prometheus/prometheus/prompb.TimeSeries
+      - github.com/prometheus/prometheus/prompb.Sample
+      - github.com/prometheus/client_golang/prometheus.CounterOpts
+      - github.com/prometheus/client_golang/prometheus.GaugeOpts
+      - github.com/prometheus/client_golang/prometheus.SummaryOpts
+      - github.com/prometheus/client_golang/prometheus.HistogramOpts
+  
+  forbidigo:
+    forbid:
+      - ^print.*$
+      - p: ^fmt\.Print.*$
+        msg: Do not commit print statements. Use a logger instead.
+    analyze-types: true
+
+  goconst:
+    ignore-tests: false
+    min-len: 5
+    min-occurrences: 5
+    numbers: true
+    # Ignore strings matching the given regular expression.
+    # ignore-strings: 'foo.+'
+
+  gocritic:
+    disable-all: true
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    # disabled-tags:
+    #   - experimental
+    #   - opinionated
+    enabled-checks:
+    settings:
+      ruleguard:
+        rules: "internal/ruleguard/rules.go"
+
+  gocyclo:
+    min-complexity: 20
+
+  godox:
+    keywords:
+      # TODO is not included in this list because we use that to track issues in the codebase.
+      - BUG
+      - FIXME
+      - HACK
+      - OPTIMIZE
+
+  goheader:
+    values:
+      const:
+        COMPANY: Grafana Labs
+    template: |-
+      Copyright (C) {{ MOD-YEAR }} {{ COMPANY }}.
+      SPDX-License-Identifier: Apache-2.0
+
+  gomoddirectives:
+    replace-local: false
+    retract-allow-no-explanation: false
+
+  gosec:
+    excludes:
+    severity: low
+    confidence: low
+    config:
+
+  gosmopolitan:
+    ignore-tests: true
+
+  importas:
+    no-unaliased: false
+    no-extra-aliases: true
+    alias:
+      - pkg: github.com/grafana/synthetic-monitoring-agent/pkg/pb/synthetic_monitoring
+        alias: sm
+      - pkg: github.com/prometheus/client_model/go
+        alias: dto
+      - pkg: github.com/grafana/sm-alerts/proto/alerts/v1
+        alias: alertspb
+      - pkg: github.com/prometheus/common/model
+        alias: prommodel
+      - pkg: github.com/go-kit/log
+        alias: kitlog
+      - pkg: github.com/grafana/auth/pkg/client
+        alias: authClient
+      - pkg: errors
+        alias: stderrors
+
+  ireturn:
+    allow:
+      - anon
+      - error
+      - stdlib
+      - generic
+      - github.com/go-kit/log.Logger
+      - github.com/grafana/gsm/internal/.*
+      - github.com/jackc/pgx/v5\.Tx
+
+  lll:
+    line-length: 120
+    tab-width: 8
+
+  maintidx:
+    # Show functions with maintainability index lower than N.
+    # A high index indicates better maintainability (it's kind of the opposite of complexity).
+    under: 20
+
+  mnd:
+    checks:
+      - argument
+      - case
+      - condition
+      - operation
+      - return
+      - assign
+    ignored-numbers:
+      - '0600'
+      - '0644'
+      - '0666'
+      - '0700'
+      - '0755'
+    ignored-functions:
+      - '^math\.'
+      - '^http\.StatusText$'
+
+  nakedret:
+    max-func-lines: 10
+
+  nolintlint:
+    allow-unused: false
+    allow-no-explanation: []
+    require-explanation: true
+    require-specific: true
+
+  rowserrcheck:
+    packages:
+      - github.com/jmoiron/sqlx
+  
+  varnamelen:
+    # Ignore "ok" variables that hold the bool return value of a type assertion.
+    ignore-type-assert-ok: true
+    # Ignore "ok" variables that hold the bool return value of a map index.
+    ignore-map-index-ok: true
+    # Ignore "ok" variables that hold the bool return value of a channel receive.
+    ignore-chan-recv-ok: true
+    ignore-decls:
+      - i int
+      - id int64
+      - wg sync.WaitGroup
+      - w http.ResponseWriter
+      - tx *sql.Tx
+      - tx pgx.Tx
+
+  wrapcheck:
+    ignorePackageGlobs:
+      - github.com/grafana/gsm/internal/*
+
+issues:
+  exclude:
+    - "(func|method|type|var|struct field|func parameter|method parameter) [^ ]+ should be .*"
+  # new: true
+  # new-from-rev: v0.0.3
+  
+  exclude-rules:
+    - path: _test.go
+      linters:
+        - funlen
+        - exhaustruct
+        - gochecknoglobals
+        - maintidx
+
+  exclude-files:
+    - "proto/.*.go"

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+set -u
+set -x
+
+# '^Release v...' matches the subject of the commit used to create the CHANGELOG.md file.
+# It looks like: "Release v1.2.3"
+mrt=$(git rev-list --topo-order --format=tformat:%s --no-commit-header HEAD | grep '^Release v[0-9]\+\.[0-9]\+\.[0-9]\+$' | head -1 | cut -d ' ' -f2)
+
+if test -z "${mrt}" ; then
+	echo "W: No tags identified, fetching evetything."
+	git fetch --tags
+else
+	git fetch origin "+refs/tags/${mrt}:refs/tags/${mrt}" || git fetch --tags
+fi

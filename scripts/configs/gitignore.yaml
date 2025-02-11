@@ -1,0 +1,7 @@
+inputs:
+        - https://raw.githubusercontent.com/github/gitignore/main/Global/Vim.gitignore
+        - https://raw.githubusercontent.com/github/gitignore/main/Global/VisualStudioCode.gitignore
+        - https://raw.githubusercontent.com/github/gitignore/main/Global/Backup.gitignore
+        - https://raw.githubusercontent.com/github/gitignore/main/Global/Linux.gitignore
+        - https://raw.githubusercontent.com/github/gitignore/main/Go.gitignore
+        - scripts/configs/gitignore.local

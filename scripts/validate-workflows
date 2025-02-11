@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+if ! command -v yq >/dev/null 2>&1 ; then
+	# TODO(mem): remove this once gbt includes yq.
+	echo "W: yq not found. Skip."
+	exit 0
+fi
+
+workdir=$(git rev-parse --show-toplevel)
+
+if test ! -e "${workdir}/.gbt.mk" ; then
+	exit 0
+fi
+
+# shellcheck disable=SC1091
+. "${workdir}/.gbt.mk"
+
+if test -z "${GBT_IMAGE}" ; then
+	echo "E: expecting a GBT_IMAGE variable in .gbt.mk but none found. Stop."
+	exit 1
+fi
+
+gbt_image_name=$(echo "${GBT_IMAGE}" | cut -d: -f1)
+gbt_image_version=$(echo "${GBT_IMAGE}" | cut -d: -f2)
+
+error=false
+
+while IFS= read -r -d '' workflow ; do
+	image=$(yq '.jobs | to_entries[] | select(.value.container.image != null) | .value.container.image' "${workflow}")
+	image_name=$(echo "${image}" | cut -d: -f1)
+	image_version=$(echo "${image}" | cut -d: -f2- | cut -d@ -f1)
+	image_sha256=$(echo "${image}" | cut -d: -f2- | cut -d@ -f2)
+	if test "${image_name}" = "${gbt_image_name}" -a "${image_version}" != "${gbt_image_version}" ; then
+		echo "E: ${workflow} has not been updated actual=${image_version} expected=${gbt_image_version}"
+		error=true
+	fi
+	if test -n "${image_sha256}" ; then
+		echo "W: ${workflow} specifies image ${image}. Docker ignores tags when specifying digests."
+	fi
+done < <( find .github/workflows/ \( -name \*.yaml -o -name \*.yml \) -print0 )
+
+if "${error}" ; then
+	exit 1
+fi
+
+exit 0
