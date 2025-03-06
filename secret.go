@@ -6,6 +6,7 @@ package client
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 	"os"
 	"strings"
 
-	"go.k6.io/k6/lib/secretsources"
+	"go.k6.io/k6/secretsource"
 )
 
 func withAuth(token string) ClientOption {
@@ -26,7 +27,7 @@ func withAuth(token string) ClientOption {
 }
 
 func init() {
-	secretsources.RegisterExtension("grafanasecrets", func(params secretsources.Params) (secretsources.SecretSource, error) {
+	secretsource.RegisterExtension("grafanasecrets", func(params secretsource.Params) (secretsource.Source, error) {
 		list := strings.Split(params.ConfigArgument, ":")
 		r := make(map[string]string, len(list))
 		for _, kv := range list {
@@ -38,10 +39,18 @@ func init() {
 			r[k] = v
 		}
 
-		url, ok := r["url"]
+		encodedURL, ok := r["url"]
 		if !ok {
 			return nil, errors.New("url parameter is required")
 		}
+
+		// Decode the base64-encoded URL
+		decodedURLBytes, err := base64.URLEncoding.DecodeString(encodedURL)
+		if err != nil {
+			return nil, fmt.Errorf("failed to decode base64 URL: %w", err)
+		}
+		url := string(decodedURLBytes)
+
 		tokenPath, ok := r["token"]
 		if !ok {
 			return nil, errors.New("token parameter is required")
