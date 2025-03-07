@@ -12,28 +12,25 @@ go install go.k6.io/xk6/cmd/xk6@latest
 
 # Build k6 with the Grafana Secrets Management extension
 xk6 build --with github.com/grafana/gsm-api-go-client
+
+# or to build a local copy of the extension
+xk6 build --with github.com/grafana/gsm-api-go-client=.
 ```
 
-## Using the Extension in k6 Tests
+## Usage
 
 After building k6 with the extension, you can access Grafana Secrets in your k6 tests using the `--secret-source` flag:
 
 ```bash
-# Run a k6 test with access to Grafana Secrets
-k6 run --secret-source=grafanasecrets=url=<base64-encoded-url>:token=<path-to-token-file> script.js
+k6 run --secret-source=grafanasecrets=config=path/to/config.json script.js
 ```
 
-### Parameters
+### Config File
 
-- `url`: Base64-encoded URL of the Grafana Secrets Management API 
-- `token`: Path to a file containing the API token for authentication
-
-### Example: Encoding the URL
+Create a JSON config file with your API URL and token:
 
 ```bash
-# Encode the API URL using base64 URL encoding
-URL="https://your-grafana-secrets-api.example.com"
-ENCODED_URL=$(echo -n $URL | base64 | tr '+/' '-_')
+echo '{"url": "https://your-grafana-secrets-api.example.com", "token": "api-token"}' | jq . > config.json
 
-k6 run --secret-source=grafanasecrets=url=$ENCODED_URL:token=/path/to/token.txt script.js
+k6 run --secret-source=grafanasecrets=config=./config.json script.js
 ```

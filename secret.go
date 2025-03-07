@@ -6,7 +6,6 @@ package client
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +16,12 @@ import (
 	"go.k6.io/k6/secretsource"
 )
 
+// Config holds the configuration for Grafana Secrets
+type Config struct {
+	URL   string `json:"url"`
+	Token string `json:"token"`
+}
+
 func withAuth(token string) ClientOption {
 	addToken := func(ctx context.Context, req *http.Request) error {
 		req.Header.Add("Authorization", "Bearer "+token)
@@ -26,58 +31,51 @@ func withAuth(token string) ClientOption {
 	return WithRequestEditorFn(addToken)
 }
 
+func ParseConfigArgument(configArg string) (string, error) {
+	configKey, configPath, ok := strings.Cut(configArg, "=")
+	if !ok || configKey != "config" {
+		return "", fmt.Errorf("config parameter is required in format 'config=path/to/config'")
+	}
+	return configPath, nil
+}
+
 func init() {
 	secretsource.RegisterExtension("grafanasecrets", func(params secretsource.Params) (secretsource.Source, error) {
-		list := strings.Split(params.ConfigArgument, ":")
-		r := make(map[string]string, len(list))
-		for _, kv := range list {
-			k, v, ok := strings.Cut(kv, "=")
-			if !ok {
-				return nil, fmt.Errorf("parsing %q, needs =", kv)
-			}
-
-			r[k] = v
-		}
-
-		encodedURL, ok := r["url"]
-		if !ok {
-			return nil, errors.New("url parameter is required")
-		}
-
-		// Decode the base64-encoded URL
-		decodedURLBytes, err := base64.URLEncoding.DecodeString(encodedURL)
+		// Parse the ConfigArgument to get the config file path
+		configPath, err := ParseConfigArgument(params.ConfigArgument)
 		if err != nil {
-			return nil, fmt.Errorf("failed to decode base64 URL: %w", err)
-		}
-		url := string(decodedURLBytes)
-
-		tokenPath, ok := r["token"]
-		if !ok {
-			return nil, errors.New("token parameter is required")
+			return nil, err
 		}
 
-		tokenBytes, err := os.ReadFile(tokenPath)
+		configData, err := os.ReadFile(configPath)
 		if err != nil {
-			return nil, fmt.Errorf("failed to read token file: %w", err)
+			return nil, fmt.Errorf("failed to read config file: %w", err)
 		}
-		token := strings.TrimSpace(string(tokenBytes))
 
-		client, err := NewClient(url, withAuth(token))
+		var config Config
+		if err := json.Unmarshal(configData, &config); err != nil {
+			return nil, fmt.Errorf("failed to parse JSON config: %w", err)
+		}
+
+		if config.URL == "" {
+			return nil, errors.New("url is required in config file")
+		}
+		if config.Token == "" {
+			return nil, errors.New("token is required in config file")
+		}
+
+		client, err := NewClient(config.URL, withAuth(config.Token))
 		if err != nil {
 			return nil, fmt.Errorf("failed to create client: %w", err)
 		}
 
 		return &grafanaSecrets{
-			url:    url,
-			token:  token,
 			client: client,
 		}, nil
 	})
 }
 
 type grafanaSecrets struct {
-	url    string
-	token  string
 	client *Client
 }
 
