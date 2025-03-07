@@ -10,10 +10,10 @@ To build k6 with this extension, use [xk6](https://github.com/grafana/xk6):
 # Install xk6
 go install go.k6.io/xk6/cmd/xk6@latest
 
-# Build k6 with the Grafana Secrets Management extension
+# Build k6 with the latest extension
 xk6 build --with github.com/grafana/gsm-api-go-client
 
-# or to build a local copy of the extension
+# or build a local copy of the extension
 xk6 build --with github.com/grafana/gsm-api-go-client=.
 ```
 
