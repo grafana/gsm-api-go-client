@@ -362,7 +362,7 @@ components:
             $ref: '#/components/schemas/SecretWithMetadata'
 
     SecretsWithMetadata:
-      description: A single secret with metadata
+      description: A list of secrets with metadata
       content:
         application/json:
           schema:
