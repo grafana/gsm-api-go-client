@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Grafana Labs.
+// SPDX-License-Identifier: Apache-2.0
+
 // Package client implements a k6 extension for accessing Grafana Secrets Management.
 // To use this extension, build k6 with xk6-build:
 //
@@ -16,15 +19,23 @@ import (
 	"go.k6.io/k6/secretsource"
 )
 
-// Config holds the configuration for Grafana Secrets
+var (
+	errInvalidConfig     = errors.New("config parameter is required in format 'config=path/to/config'")
+	errMissingURL        = errors.New("url is required in config file")
+	errMissingToken      = errors.New("token is required in config file")
+	errFailedToGetSecret = errors.New("failed to get secret")
+)
+
+// Config holds the configuration for Grafana Secrets.
 type Config struct {
 	URL   string `json:"url"`
 	Token string `json:"token"`
 }
 
 func withAuth(token string) ClientOption {
-	addToken := func(ctx context.Context, req *http.Request) error {
+	addToken := func(_ context.Context, req *http.Request) error {
 		req.Header.Add("Authorization", "Bearer "+token)
+
 		return nil
 	}
 
@@ -34,11 +45,13 @@ func withAuth(token string) ClientOption {
 func ParseConfigArgument(configArg string) (string, error) {
 	configKey, configPath, ok := strings.Cut(configArg, "=")
 	if !ok || configKey != "config" {
-		return "", fmt.Errorf("config parameter is required in format 'config=path/to/config'")
+		return "", errInvalidConfig
 	}
+
 	return configPath, nil
 }
 
+//nolint:gochecknoinits // This is how xk6 works.
 func init() {
 	secretsource.RegisterExtension("grafanasecrets", func(params secretsource.Params) (secretsource.Source, error) {
 		// Parse the ConfigArgument to get the config file path
@@ -58,10 +71,11 @@ func init() {
 		}
 
 		if config.URL == "" {
-			return nil, errors.New("url is required in config file")
+			return nil, errMissingURL
 		}
+
 		if config.Token == "" {
-			return nil, errors.New("token is required in config file")
+			return nil, errMissingToken
 		}
 
 		client, err := NewClient(config.URL, withAuth(config.Token))
@@ -89,20 +103,22 @@ func (gs *grafanaSecrets) Description() string {
 
 func (gs *grafanaSecrets) Get(key string) (string, error) {
 	ctx := context.Background()
+
 	response, err := gs.client.DecryptSecretById(ctx, key)
 	if err != nil {
 		return "", fmt.Errorf("failed to get secret: %w", err)
 	}
 
+	defer response.Body.Close()
+
 	if response.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to get secret: status code %d", response.StatusCode)
+		return "", fmt.Errorf("status code %d: %w", response.StatusCode, errFailedToGetSecret)
 	}
 
 	var decryptedSecret DecryptedSecret
 	if err := json.NewDecoder(response.Body).Decode(&decryptedSecret); err != nil {
 		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
-	defer response.Body.Close()
 
 	return decryptedSecret.Plaintext, nil
 }

@@ -243,6 +243,8 @@ linters-settings:
         alias: authClient
       - pkg: errors
         alias: stderrors
+      - pkg: github.com/grafana/gsm-api-go-client
+        alias: gsmClient
 
   ireturn:
     allow:

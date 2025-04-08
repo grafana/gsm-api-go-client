@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Grafana Labs.
+// SPDX-License-Identifier: Apache-2.0
+
 package client
 
 import (
@@ -8,32 +11,42 @@ import (
 )
 
 func TestGrafanaSecretsGet(t *testing.T) {
+	t.Parallel()
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t.Logf("Received headers: %+v", r.Header)
+
 		if r.Header.Get("Authorization") != "Bearer test-token" {
 			w.WriteHeader(http.StatusUnauthorized)
+
 			return
 		}
 
 		secret := DecryptedSecret{
 			Plaintext: "test-secret-value",
 		}
-		json.NewEncoder(w).Encode(secret)
+
+		err := json.NewEncoder(w).Encode(secret)
+		if err != nil {
+			t.Fatalf("failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
-	gs := &grafanaSecrets{
+	grafanaSecrets := &grafanaSecrets{
 		client: func() *Client {
 			c, _ := NewClient(server.URL, withAuth("test-token"))
+
 			return c
 		}(),
 	}
 
 	t.Run("successful get", func(t *testing.T) {
-		secret, err := gs.Get("test-secret-id")
+		secret, err := grafanaSecrets.Get("test-secret-id")
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
+
 		if secret != "test-secret-value" {
 			t.Errorf("got secret = %v, want %v", secret, "test-secret-value")
 		}
@@ -41,6 +54,8 @@ func TestGrafanaSecretsGet(t *testing.T) {
 }
 
 func TestParseConfigArgument(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name      string
 		configArg string
@@ -70,22 +85,29 @@ func TestParseConfigArgument(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			gotPath, err := ParseConfigArgument(tt.configArg)
-			if tt.wantErr {
+	for _, testcase := range tests {
+		t.Run(testcase.name, func(t *testing.T) {
+			t.Parallel()
+
+			gotPath, err := ParseConfigArgument(testcase.configArg)
+			if testcase.wantErr {
 				if err == nil {
 					t.Errorf("ParseConfigArgument() error = nil, wantErr = true")
+
 					return
 				}
+
 				return
 			}
+
 			if err != nil {
 				t.Errorf("ParseConfigArgument() unexpected error = %v", err)
+
 				return
 			}
-			if gotPath != tt.wantPath {
-				t.Errorf("ParseConfigArgument() = %q, want %q", gotPath, tt.wantPath)
+
+			if gotPath != testcase.wantPath {
+				t.Errorf("ParseConfigArgument() = %q, want %q", gotPath, testcase.wantPath)
 			}
 		})
 	}
