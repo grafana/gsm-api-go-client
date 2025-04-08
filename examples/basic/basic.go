@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	client "github.com/grafana/gsm-api-go-client"
+	gsmClient "github.com/grafana/gsm-api-go-client"
 )
 
 func main() {
@@ -15,26 +15,38 @@ func main() {
 		log.Fatal("GSM_API_TOKEN is required")
 	}
 
-	c, err := client.NewClient("http://localhost:3000", withAuth(token))
+	client, err := gsmClient.NewClient("http://localhost:3000", withAuth(token))
 	if err != nil {
 		log.Fatalf("Cannot create client: %s", err)
 	}
 
 	ctx := context.Background()
 
-	resp, err := c.AddSecret(ctx, client.AddSecretJSONRequestBody{
+	secretValue := `super-secret`
+
+	resp, err := client.AddSecret(ctx, gsmClient.AddSecretJSONRequestBody{
 		Name:        "my-secret",
 		Description: "This is a secret",
-		Plaintext:   "super-secret",
+		Plaintext:   &secretValue,
 		Labels:      nil,
 	})
+	if err != nil {
+		log.Fatalf("Cannot add secret: %s", err)
+	}
+
+	defer resp.Body.Close()
+
+	// do something with the response
+
+	_ = resp
 }
 
-func withAuth(token string) client.ClientOption {
-	addToken := func(ctx context.Context, req *http.Request) error {
+func withAuth(token string) gsmClient.ClientOption {
+	addToken := func(_ context.Context, req *http.Request) error {
 		req.Header.Add("Authorization", "Bearer "+token)
+
 		return nil
 	}
 
-	return client.WithRequestEditorFn(addToken)
+	return gsmClient.WithRequestEditorFn(addToken)
 }
