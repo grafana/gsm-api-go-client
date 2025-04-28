@@ -15,26 +15,47 @@ func main() {
 		log.Fatal("GSM_API_TOKEN is required")
 	}
 
-	c, err := client.NewClient("http://localhost:3000", withAuth(token))
+	apiClient, err := client.NewClientWithResponses("http://localhost:3000", withAuth(token), withAcceptJSON())
 	if err != nil {
 		log.Fatalf("Cannot create client: %s", err)
 	}
 
 	ctx := context.Background()
 
-	resp, err := c.AddSecret(ctx, client.AddSecretJSONRequestBody{
+	secret := "super-secret"
+
+	resp, err := apiClient.AddSecretWithResponse(ctx, client.AddSecretJSONRequestBody{
 		Name:        "my-secret",
 		Description: "This is a secret",
-		Plaintext:   "super-secret",
 		Labels:      nil,
+		Plaintext:   &secret,
 	})
+
+	switch {
+	case err != nil:
+		log.Fatalf("Cannot add secret: %s", err)
+
+	case resp.HTTPResponse.StatusCode == http.StatusCreated:
+		// The secret was created, so JSON201 is populated.
+		log.Println("Secret ID:", resp.JSON201.Uuid)
+
+	default:
+		log.Fatalf("Cannot add secret: %s", resp.HTTPResponse.Status)
+	}
 }
 
 func withAuth(token string) client.ClientOption {
-	addToken := func(ctx context.Context, req *http.Request) error {
+	return client.WithRequestEditorFn(func(_ context.Context, req *http.Request) error {
 		req.Header.Add("Authorization", "Bearer "+token)
-		return nil
-	}
 
-	return client.WithRequestEditorFn(addToken)
+		return nil
+	})
+}
+
+func withAcceptJSON() client.ClientOption {
+	return client.WithRequestEditorFn(func(_ context.Context, req *http.Request) error {
+		req.Header.Add("Accept", "application/json")
+
+		return nil
+	})
 }
