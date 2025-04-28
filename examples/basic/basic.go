@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Grafana Labs.
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -10,43 +13,46 @@ import (
 )
 
 func main() {
+	const serverAddress = "http://localhost:3000"
+
 	token := os.Getenv("GSM_API_TOKEN")
 	if token == "" {
 		log.Fatal("GSM_API_TOKEN is required")
 	}
 
-	client, err := gsmClient.NewClient("http://localhost:3000", withAuth(token))
+	apiClient, err := gsmClient.NewClientWithResponses(
+		serverAddress,
+		gsmClient.WithBearerAuth(token),
+		gsmClient.WithAcceptJSON(),
+	)
 	if err != nil {
 		log.Fatalf("Cannot create client: %s", err)
 	}
 
 	ctx := context.Background()
 
-	secretValue := `super-secret`
+	secretValue := "super-secret"
 
-	resp, err := client.AddSecret(ctx, gsmClient.AddSecretJSONRequestBody{
+	resp, err := apiClient.AddSecretWithResponse(ctx, gsmClient.AddSecretJSONRequestBody{
 		Name:        "my-secret",
 		Description: "This is a secret",
-		Plaintext:   &secretValue,
 		Labels:      nil,
+		Plaintext:   &secretValue,
 	})
-	if err != nil {
-		log.Fatalf("Cannot add secret: %s", err)
-	}
 
-	defer resp.Body.Close()
+	switch {
+	case err != nil:
+		log.Fatalf("Cannot add secret: %s", err)
+
+	case resp.HTTPResponse.StatusCode == http.StatusCreated:
+		// The secret was created, so JSON201 is populated.
+		log.Println("Secret ID:", resp.JSON201.Uuid)
+
+	default:
+		log.Fatalf("Cannot add secret: %s", resp.HTTPResponse.Status)
+	}
 
 	// do something with the response
 
 	_ = resp
-}
-
-func withAuth(token string) gsmClient.ClientOption {
-	addToken := func(_ context.Context, req *http.Request) error {
-		req.Header.Add("Authorization", "Bearer "+token)
-
-		return nil
-	}
-
-	return gsmClient.WithRequestEditorFn(addToken)
 }
