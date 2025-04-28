@@ -32,16 +32,6 @@ type Config struct {
 	Token string `json:"token"`
 }
 
-func withAuth(token string) ClientOption {
-	addToken := func(_ context.Context, req *http.Request) error {
-		req.Header.Add("Authorization", "Bearer "+token)
-
-		return nil
-	}
-
-	return WithRequestEditorFn(addToken)
-}
-
 func ParseConfigArgument(configArg string) (string, error) {
 	configKey, configPath, ok := strings.Cut(configArg, "=")
 	if !ok || configKey != "config" {
@@ -78,7 +68,7 @@ func init() {
 			return nil, errMissingToken
 		}
 
-		client, err := NewClient(config.URL, withAuth(config.Token))
+		client, err := NewClient(config.URL, WithBearerAuth(config.Token))
 		if err != nil {
 			return nil, fmt.Errorf("failed to create client: %w", err)
 		}

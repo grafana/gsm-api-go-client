@@ -35,7 +35,7 @@ func TestGrafanaSecretsGet(t *testing.T) {
 
 	grafanaSecrets := &grafanaSecrets{
 		client: func() *Client {
-			c, _ := NewClient(server.URL, withAuth("test-token"))
+			c, _ := NewClient(server.URL, WithBearerAuth("test-token"))
 
 			return c
 		}(),
