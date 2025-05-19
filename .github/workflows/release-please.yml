@@ -17,6 +17,7 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+      issues: write # required to write labels
 
     steps:
       - name: Retrieve release app credentials
