@@ -1,0 +1,107 @@
+name: validate pull request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: none
+
+jobs:
+  validate:
+    name: validate
+    strategy:
+      matrix:
+        arch: [ x64, arm64 ]
+    runs-on: github-hosted-ubuntu-${{ matrix.arch }}-small
+    permissions:
+      contents: read
+      id-token: write
+    container:
+      image: ghcr.io/grafana/grafana-build-tools:v1.4.0@sha256:a6892e46733388ee084d314db9413bfbb3bbc707934910f3a2d34051f07a9323
+    steps:
+      - name: checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: set up global git config
+        run: |
+          # The directory where the code has been checked out ends up belonging
+          # to a different user, so git complains about permissions. Indicate
+          # that it's safe to ignore.
+          git config --global --add safe.directory '*'
+
+      - name: retrieve secrets
+        id: get-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@7d18a46aafb8b875ed76a0bc98852d74b91e7f91 # v1.0.0
+        with:
+          repo_secrets: |
+            SM_CI_APP_ID=synthetic-monitoring-ci:app-id
+            SM_CI_APP_PRIVATE_KEY=synthetic-monitoring-ci:private-key
+
+      - name: create GitHub app token
+        id: app-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        with:
+          app-id: ${{ env.SM_CI_APP_ID }}
+          private-key: ${{ env.SM_CI_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: create Git credentials
+        id: git-credentials
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          echo "machine github.com login ${GITHUB_ACTOR} password ${APP_TOKEN}" >> ~/.netrc
+          chmod 600 ~/.netrc
+
+      - name: ensure dependencies are up-to-date
+        run: |
+          make deps
+          scripts/enforce-clean
+
+      - name: version
+        id: version
+        run: |
+          make version
+          echo "value=$(cat dist/version)" >> "$GITHUB_OUTPUT"
+
+      - name: identify platform
+        id: id-platform
+        run: |
+          echo "platform=$(go env GOOS)/$(go env GOARCH)" >> "$GITHUB_OUTPUT"
+
+      - name: build
+        run: make build-native
+ 
+      - name: lint
+        run: make lint
+
+      - name: test
+        run: make test
+
+      - name: find Dockerfile
+        id: find-dockerfile
+        run: |
+          if test -e Dockerfile ; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: test docker build
+        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@7d18a46aafb8b875ed76a0bc98852d74b91e7f91 # v1.0.0
+        if: steps.find-dockerfile.outputs.found == 'true'
+        with:
+          push: false
+          platforms: |-
+            ${{ steps.id-platform.outputs.platform }}
+          tags: |-
+            type=raw,value=${{ steps.version.outputs.value }}
+            type=sha,prefix=sha-,format=short
+            latest

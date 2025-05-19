@@ -4,56 +4,65 @@
 package version
 
 import (
-	"path"
 	"runtime/debug"
+	"slices"
+	"strings"
 	"sync"
 )
 
-var version = "v0.0.0"
+const (
+	revisionKey = "vcs.revision"
+	timeKey     = "vcs.time"
+)
 
 func Short() string {
-	// We don't use "vcs.version" because that depends on building the binary in a particular way.
-	return version
+	bi := getBuildInfo()
+
+	return bi.Main.Version
 }
 
 func Commit() string {
-	return getBuildInfoByKey("vcs.revision")
+	return getBuildInfoByKey(revisionKey)
 }
 
 func Buildstamp() string {
-	return getBuildInfoByKey("vcs.time")
-}
-
-func Name() string {
-	bi := getBuildInfo()
-	if bi == nil {
-		return "unknown"
-	}
-
-	return path.Base(bi.Path)
+	return getBuildInfoByKey(timeKey)
 }
 
 func getBuildInfoByKey(key string) string {
-	bi := getBuildInfo()
-	if bi == nil || len(bi.Settings) == 0 {
-		return "unknown"
+	buildinfo := getBuildInfo()
+	if buildinfo == nil {
+		return "invalid"
 	}
 
-	for _, setting := range bi.Settings {
-		if setting.Key == key {
-			return setting.Value
-		}
+	idx, found := slices.BinarySearchFunc(buildinfo.Settings, key, isKey)
+	if found {
+		return buildinfo.Settings[idx].Value
 	}
 
-	return ""
+	return "unknown"
 }
 
-//nolint:gochecknoglobals // This is accessed thru other functions in this file.
+//nolint:gochecknoglobals // This variable is only accessed in this package.
 var getBuildInfo = sync.OnceValue(func() *debug.BuildInfo {
-	bi, ok := debug.ReadBuildInfo()
+	buildinfo, ok := debug.ReadBuildInfo()
 	if !ok {
 		return nil
 	}
 
-	return bi
+	slices.SortFunc(buildinfo.Settings, cmpBuildSettings)
+
+	return buildinfo
 })
+
+func cmpBuildSettings(a, b debug.BuildSetting) int {
+	if v := strings.Compare(a.Key, b.Key); v != 0 {
+		return v
+	}
+
+	return strings.Compare(a.Value, b.Value)
+}
+
+func isKey(a debug.BuildSetting, key string) int {
+	return strings.Compare(a.Key, key)
+}
