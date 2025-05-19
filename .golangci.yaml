@@ -94,13 +94,13 @@ linters:
     - sqlclosecheck
     - tagalign
     - tagliatelle
-    - tenv
     - testableexamples
     - testifylint
     - thelper
     - unconvert
     - unparam
     - usestdlibvars
+    - usetesting
     - varnamelen
     - wastedassign
     - whitespace
