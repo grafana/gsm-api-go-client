@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/grafana/gsm-api-go-client/compare/v0.2.0...v0.2.1) (2025-08-09)
+
+
+### Miscellaneous Chores
+
+* Update actions/create-github-app-token action to v2.1.0 ([4699059](https://github.com/grafana/gsm-api-go-client/commit/4699059d06d3065a51e31bd4e583d4dccf99f43e))
+
 ## [0.2.0](https://github.com/grafana/gsm-api-go-client/compare/v0.1.0...v0.2.0) (2025-08-08)
 
 
