@@ -6,7 +6,7 @@ require (
 	github.com/oapi-codegen/runtime v1.1.2
 	github.com/quasilyte/go-ruleguard/dsl v0.3.22
 	github.com/stretchr/testify v1.10.0
-	go.k6.io/k6 v1.2.1
+	go.k6.io/k6 v1.2.2
 	golang.org/x/time v0.12.0
 )
 
