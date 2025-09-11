@@ -1,13 +1,15 @@
 module github.com/grafana/gsm-api-go-client
 
-go 1.23.6
+go 1.24.0
+
+toolchain go1.24.7
 
 require (
 	github.com/oapi-codegen/runtime v1.1.2
 	github.com/quasilyte/go-ruleguard/dsl v0.3.22
 	github.com/stretchr/testify v1.11.1
 	go.k6.io/k6 v1.2.3
-	golang.org/x/time v0.12.0
+	golang.org/x/time v0.13.0
 )
 
 require (
