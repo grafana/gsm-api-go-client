@@ -9,7 +9,7 @@ require (
 	github.com/quasilyte/go-ruleguard/dsl v0.3.23
 	github.com/stretchr/testify v1.11.1
 	go.k6.io/k6 v1.3.0
-	golang.org/x/time v0.13.0
+	golang.org/x/time v0.14.0
 )
 
 require (
