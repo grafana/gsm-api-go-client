@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.2](https://github.com/grafana/gsm-api-go-client/compare/v0.2.1...v0.2.2) (2025-11-12)
+
+
+### Miscellaneous Chores
+
+* Update dependency go to v1.25.4 ([#56](https://github.com/grafana/gsm-api-go-client/issues/56)) ([134da38](https://github.com/grafana/gsm-api-go-client/commit/134da386746d923f60dcefa54fded68411894e1f))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.22.0 ([#62](https://github.com/grafana/gsm-api-go-client/issues/62)) ([ff9ae9e](https://github.com/grafana/gsm-api-go-client/commit/ff9ae9e4c4d8cd95c869c63d2931a6521df9b47e))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.23.0 ([5da62b2](https://github.com/grafana/gsm-api-go-client/commit/5da62b27f9d33ffa9b4204cb4b705ee4971665e1))
+* Update googleapis/release-please-action action to v4.4.0 ([#61](https://github.com/grafana/gsm-api-go-client/issues/61)) ([fd2e894](https://github.com/grafana/gsm-api-go-client/commit/fd2e894248cb319f1b0faf0007729ff60db559a8))
+* Update module go.k6.io/k6 to v1.4.0 ([#64](https://github.com/grafana/gsm-api-go-client/issues/64)) ([a8516e8](https://github.com/grafana/gsm-api-go-client/commit/a8516e8fdd05ccc6ed4ae64a9b70898cd179d4a2))
+
 ## [0.2.1](https://github.com/grafana/gsm-api-go-client/compare/v0.2.0...v0.2.1) (2025-10-15)
 
 
