@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.2.2](https://github.com/grafana/gsm-api-go-client/compare/v0.2.1...v0.2.2) (2026-03-06)
+
+
+### Miscellaneous Chores
+
+* **deps:** update grafana/shared-workflows/get-vault-secrets action to v1.3.0 ([e77744e](https://github.com/grafana/gsm-api-go-client/commit/e77744eb56ffed41cf331091814338bf995e6da4))
+* **deps:** update grafana/shared-workflows/get-vault-secrets action to v1.3.1 ([fb95326](https://github.com/grafana/gsm-api-go-client/commit/fb95326d44df7c06335aca24e54b498de00f2b22))
+* Update actions/checkout action to v5.0.1 ([9420ee2](https://github.com/grafana/gsm-api-go-client/commit/9420ee26a901a15726158db8fb8503550942b8d8))
+* Update actions/checkout action to v6 ([1b3ffd3](https://github.com/grafana/gsm-api-go-client/commit/1b3ffd393d227a37d9bee7394a10e9377ee10120))
+* Update actions/checkout action to v6.0.2 ([bf18dfa](https://github.com/grafana/gsm-api-go-client/commit/bf18dfa012123681b010200aead4ca5ab49653aa))
+* Update actions/create-github-app-token action to v2.2.1 ([79d52b3](https://github.com/grafana/gsm-api-go-client/commit/79d52b32712d5dcfbf996a309584aa349ab6aeec))
+* Update dependency go to v1.25.4 ([#56](https://github.com/grafana/gsm-api-go-client/issues/56)) ([134da38](https://github.com/grafana/gsm-api-go-client/commit/134da386746d923f60dcefa54fded68411894e1f))
+* Update dependency go to v1.25.5 ([#74](https://github.com/grafana/gsm-api-go-client/issues/74)) ([d1a8f3c](https://github.com/grafana/gsm-api-go-client/commit/d1a8f3cca869bd468e31788717a96f90fb13e203))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.22.0 ([#62](https://github.com/grafana/gsm-api-go-client/issues/62)) ([ff9ae9e](https://github.com/grafana/gsm-api-go-client/commit/ff9ae9e4c4d8cd95c869c63d2931a6521df9b47e))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.23.0 ([5da62b2](https://github.com/grafana/gsm-api-go-client/commit/5da62b27f9d33ffa9b4204cb4b705ee4971665e1))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.23.1 ([#67](https://github.com/grafana/gsm-api-go-client/issues/67)) ([41ac83a](https://github.com/grafana/gsm-api-go-client/commit/41ac83a1c1318b55948fdc9b902be2b4b9e63463))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.27.1 ([ce8e9ed](https://github.com/grafana/gsm-api-go-client/commit/ce8e9ed1cb092a6ca2df81d9c7f9342cc5cdd504))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.28.0 ([#75](https://github.com/grafana/gsm-api-go-client/issues/75)) ([3064bbd](https://github.com/grafana/gsm-api-go-client/commit/3064bbdeeb1af658f97914f764a14af96cb75f4f))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.28.1 ([126c4b7](https://github.com/grafana/gsm-api-go-client/commit/126c4b78a79b457f6a2303c68e9992fa1085c9cc))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.28.2 ([93acd37](https://github.com/grafana/gsm-api-go-client/commit/93acd3782f6dafb41ab66e5f71e4f2f37770e114))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.28.4 ([6da7091](https://github.com/grafana/gsm-api-go-client/commit/6da70918413ef519271f6c36c7e8dd07ee4e27a8))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.29.0 ([12b9b8b](https://github.com/grafana/gsm-api-go-client/commit/12b9b8b2ed980f867383903b14321874426e9bd2))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.30.0 ([6186cce](https://github.com/grafana/gsm-api-go-client/commit/6186cce8e1d6d7a9e803674d57e831b2cf74ec63))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.31.0 ([76d3c25](https://github.com/grafana/gsm-api-go-client/commit/76d3c25b9c4e83dda2baf89f057a52bed7c2323f))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.31.1 ([e4b0798](https://github.com/grafana/gsm-api-go-client/commit/e4b0798f14180d66f64d906760d5659d29fc1d4e))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.32.0 ([143edd2](https://github.com/grafana/gsm-api-go-client/commit/143edd2b0b4e5e4f240c80293a2b84c7ccd2710f))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.33.0 ([85d4e3c](https://github.com/grafana/gsm-api-go-client/commit/85d4e3c4c47a68175f57b129911e8c09a322d7c1))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.33.1 ([7570cd4](https://github.com/grafana/gsm-api-go-client/commit/7570cd4d3a66852093455421032e1140d22edad7))
+* Update googleapis/release-please-action action to v4.4.0 ([#61](https://github.com/grafana/gsm-api-go-client/issues/61)) ([fd2e894](https://github.com/grafana/gsm-api-go-client/commit/fd2e894248cb319f1b0faf0007729ff60db559a8))
+* Update module github.com/oapi-codegen/runtime to v1.2.0 ([6c0a280](https://github.com/grafana/gsm-api-go-client/commit/6c0a280cfce880cafab94e6bd4e42478f6db9621))
+* Update module go.k6.io/k6 to v1.4.0 ([#64](https://github.com/grafana/gsm-api-go-client/issues/64)) ([a8516e8](https://github.com/grafana/gsm-api-go-client/commit/a8516e8fdd05ccc6ed4ae64a9b70898cd179d4a2))
+* Update module go.k6.io/k6 to v1.5.0 ([2a3fb04](https://github.com/grafana/gsm-api-go-client/commit/2a3fb0477ac1c57154e56ac15122388fa988959e))
+* Update module go.k6.io/k6 to v1.6.0 ([0c7ebb3](https://github.com/grafana/gsm-api-go-client/commit/0c7ebb3799326c43c8a7484401283d14eadc30e0))
+* Update module go.k6.io/k6 to v1.6.1 ([e1c0bda](https://github.com/grafana/gsm-api-go-client/commit/e1c0bda0984194060e082e67121648b3312ac9ad))
+
 ## [0.2.1](https://github.com/grafana/gsm-api-go-client/compare/v0.2.0...v0.2.1) (2025-10-15)
 
 
