@@ -95,10 +95,11 @@ jobs:
           fi
 
       - name: test docker build
-        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@7d18a46aafb8b875ed76a0bc98852d74b91e7f91 # v1.0.0
+        uses: grafana/shared-workflows/actions/docker-build-push-image@21ae57f82e5256e5a418406388926d4ba24bccf2 # docker-build-push-image/v0.3.2
         if: steps.find-dockerfile.outputs.found == 'true'
         with:
           push: false
+          registries: dockerhub
           platforms: |-
             ${{ steps.id-platform.outputs.platform }}
           tags: |-
