@@ -209,7 +209,7 @@ linters-settings:
       const:
         COMPANY: Grafana Labs
     template: |-
-      Copyright (C) {{ MOD-YEAR }} {{ COMPANY }}.
+      Copyright (C) {{ MOD-YEAR-RANGE }} {{ COMPANY }}.
       SPDX-License-Identifier: Apache-2.0
 
   gomoddirectives:

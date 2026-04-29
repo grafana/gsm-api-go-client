@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Grafana Labs.
+// Copyright (C) 2025-2026 Grafana Labs.
 // SPDX-License-Identifier: Apache-2.0
 
 package client
@@ -176,10 +176,10 @@ func TestParseConfigArgument(t *testing.T) {
 		t.Run(testcase.name, func(t *testing.T) {
 			t.Parallel()
 
-			gotPath, err := ParseConfigArgument(testcase.configArg)
+			gotPath, err := parseConfigArgument(testcase.configArg)
 			if testcase.wantErr {
 				if err == nil {
-					t.Errorf("ParseConfigArgument() error = nil, wantErr = true")
+					t.Errorf("parseConfigArgument() error = nil, wantErr = true")
 
 					return
 				}
@@ -188,13 +188,13 @@ func TestParseConfigArgument(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Errorf("ParseConfigArgument() unexpected error = %v", err)
+				t.Errorf("parseConfigArgument() unexpected error = %v", err)
 
 				return
 			}
 
 			if gotPath != testcase.wantPath {
-				t.Errorf("ParseConfigArgument() = %q, want %q", gotPath, testcase.wantPath)
+				t.Errorf("parseConfigArgument() = %q, want %q", gotPath, testcase.wantPath)
 			}
 		})
 	}

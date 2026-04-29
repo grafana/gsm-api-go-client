@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Grafana Labs.
+// Copyright (C) 2025-2026 Grafana Labs.
 // SPDX-License-Identifier: Apache-2.0
 
 // Package client implements a k6 extension for accessing Grafana Secrets Management.
@@ -38,7 +38,7 @@ type extConfig struct {
 	RequestsBurst          *int   `json:"requestsBurst"`
 }
 
-func ParseConfigArgument(configArg string) (string, error) {
+func parseConfigArgument(configArg string) (string, error) {
 	configKey, configPath, ok := strings.Cut(configArg, "=")
 	if !ok || configKey != "config" {
 		return "", errInvalidConfig
@@ -141,7 +141,7 @@ func getConfig(arg string) (extConfig, error) {
 	var config extConfig
 
 	// Parse the ConfigArgument to get the config file path
-	configPath, err := ParseConfigArgument(arg)
+	configPath, err := parseConfigArgument(arg)
 	if err != nil {
 		return config, err
 	}
