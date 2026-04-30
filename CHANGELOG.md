@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/grafana/gsm-api-go-client/compare/v0.2.3...v0.3.0) (2026-04-30)
+
+
+### Features
+
+* Remove k6 extension bits ([#111](https://github.com/grafana/gsm-api-go-client/issues/111)) ([9e118f7](https://github.com/grafana/gsm-api-go-client/commit/9e118f73bfbffb4269c189479c1e9f89e7c76162))
+
+
+### Fixes
+
+* Unexport ParseConfigArgument ([#109](https://github.com/grafana/gsm-api-go-client/issues/109)) ([fdf9955](https://github.com/grafana/gsm-api-go-client/commit/fdf9955342831511d5611fba5ebe38ba6248d533))
+
 ## [0.2.3](https://github.com/grafana/gsm-api-go-client/compare/v0.2.2...v0.2.3) (2026-04-28)
 
 
