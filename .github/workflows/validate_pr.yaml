@@ -35,27 +35,17 @@ jobs:
           # that it's safe to ignore.
           git config --global --add safe.directory '*'
 
-      - name: retrieve secrets
-        id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@7d18a46aafb8b875ed76a0bc98852d74b91e7f91 # v1.0.0
+      - name: Get GitHub App token
+        id: get-github-app-token
+        uses: grafana/shared-workflows/actions/create-github-app-token@580590a644e82e79bb2598bdaba0be245a14dda0 # create-github-app-token/v0.2.2
         with:
-          repo_secrets: |
-            SM_CI_APP_ID=synthetic-monitoring-ci:app-id
-            SM_CI_APP_PRIVATE_KEY=synthetic-monitoring-ci:private-key
-
-      - name: create GitHub app token
-        id: app-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
-        with:
-          app-id: ${{ env.SM_CI_APP_ID }}
-          private-key: ${{ env.SM_CI_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
+          github_app: synthetic-monitoring-ci
 
       - name: create Git credentials
         id: git-credentials
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_TOKEN: ${{ steps.get-github-app-token.outputs.token }}
         run: |
           echo "machine github.com login ${GITHUB_ACTOR} password ${APP_TOKEN}" >> ~/.netrc
           chmod 600 ~/.netrc
