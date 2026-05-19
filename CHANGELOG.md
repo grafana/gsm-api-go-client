@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.1](https://github.com/grafana/gsm-api-go-client/compare/v0.3.0...v0.3.1) (2026-05-19)
+
+
+### Fixes
+
+* Add id-token: write for create-github-app-token ([#120](https://github.com/grafana/gsm-api-go-client/issues/120)) ([8a8e450](https://github.com/grafana/gsm-api-go-client/commit/8a8e4505fefb6b9b28932c3fc8dd081da95fbbd6))
+* Migrate workflows to NOT use get-vault-secrets ([#119](https://github.com/grafana/gsm-api-go-client/issues/119)) ([bde47e9](https://github.com/grafana/gsm-api-go-client/commit/bde47e97fb4594a5905c551a495b95465730fa3b))
+* Point release please at .github/release-please/release-please-ma… ([#121](https://github.com/grafana/gsm-api-go-client/issues/121)) ([3096312](https://github.com/grafana/gsm-api-go-client/commit/3096312a351f7a51fef528b0db3b7cc79df0e59a))
+
+
+### Miscellaneous Chores
+
+* **deps:** update grafana/shared-workflows/docker-build-push-image action to v0.3.3 ([#114](https://github.com/grafana/gsm-api-go-client/issues/114)) ([bcf0f4a](https://github.com/grafana/gsm-api-go-client/commit/bcf0f4a76fcccb17a5648cd0ecae655ba71e7033))
+* **deps:** update grafana/shared-workflows/get-vault-secrets action to v1.3.2 ([#115](https://github.com/grafana/gsm-api-go-client/issues/115)) ([3975c90](https://github.com/grafana/gsm-api-go-client/commit/3975c9022a0cfe2d82d7c38203224842822fcebd))
+* **deps:** update grafana/shared-workflows/validate-renovate-config action to v0.1.3 ([#116](https://github.com/grafana/gsm-api-go-client/issues/116)) ([49954c4](https://github.com/grafana/gsm-api-go-client/commit/49954c4b6a16fb7d21e5b8a023ef6efe7e45e944))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.37.1 ([8dae095](https://github.com/grafana/gsm-api-go-client/commit/8dae095822a1801179982bb7af9f913260199824))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.38.1 ([#117](https://github.com/grafana/gsm-api-go-client/issues/117)) ([d5ad3f1](https://github.com/grafana/gsm-api-go-client/commit/d5ad3f1e30b1943963731863a13c12a8241eebab))
+
 ## [0.3.0](https://github.com/grafana/gsm-api-go-client/compare/v0.2.3...v0.3.0) (2026-04-30)
 
 
