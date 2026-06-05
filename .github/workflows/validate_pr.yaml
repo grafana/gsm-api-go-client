@@ -22,7 +22,7 @@ jobs:
       image: ghcr.io/grafana/grafana-build-tools:v1.38.1@sha256:d69ef5c4cc8d57079fc89141d51019086084e8c049440bad5161d10c2c0b56f7
     steps:
       - name: checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
           fetch-tags: true
