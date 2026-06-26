@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.2](https://github.com/grafana/gsm-api-go-client/compare/v0.3.1...v0.3.2) (2026-06-26)
+
+
+### Miscellaneous Chores
+
+* **deps:** update grafana/shared-workflows/docker-build-push-image action to v0.3.4 ([590be39](https://github.com/grafana/gsm-api-go-client/commit/590be396b73a436c32122f00f2724132174b6ba1))
+* **deps:** update grafana/shared-workflows/validate-renovate-config action to v0.1.4 ([3808ee9](https://github.com/grafana/gsm-api-go-client/commit/3808ee995cc08158a2b2c61f797af9c823e9d1a7))
+* Update actions/checkout action to v7 ([#137](https://github.com/grafana/gsm-api-go-client/issues/137)) ([4ea283e](https://github.com/grafana/gsm-api-go-client/commit/4ea283ed5534a30c6f24b790930ba05cf9507650))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.40.1 ([65e4be9](https://github.com/grafana/gsm-api-go-client/commit/65e4be9a4c34207e73818096699721a8c41181f5))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.41.0 ([23346df](https://github.com/grafana/gsm-api-go-client/commit/23346df7c8bbf38777cbb1e9e13ed411eb25801d))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.41.1 ([#136](https://github.com/grafana/gsm-api-go-client/issues/136)) ([b7bc787](https://github.com/grafana/gsm-api-go-client/commit/b7bc78794607ca8bfe629204e6731a4ff00088b2))
+* Update go toolchain directive to v1.25.11 [SECURITY] ([b5b7eee](https://github.com/grafana/gsm-api-go-client/commit/b5b7eeee154c87148453e45a3976d5cbfd721a1f))
+* Update module github.com/oapi-codegen/runtime to v1.4.2 ([#138](https://github.com/grafana/gsm-api-go-client/issues/138)) ([6f0edca](https://github.com/grafana/gsm-api-go-client/commit/6f0edca5b220abbc0c99c0c7338225566d3fcd0a))
+
 ## [0.3.1](https://github.com/grafana/gsm-api-go-client/compare/v0.3.0...v0.3.1) (2026-06-08)
 
 
