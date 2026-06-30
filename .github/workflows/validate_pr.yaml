@@ -19,7 +19,7 @@ jobs:
       contents: read
       id-token: write
     container:
-      image: ghcr.io/grafana/grafana-build-tools:v1.41.1@sha256:9d4d1161727ee2c9b0d52f7de1159a73c9775942c8ba97e51b9a1db2605e2452
+      image: ghcr.io/grafana/grafana-build-tools:v1.42.0@sha256:bc56136cd8768f0bd2eb3cb3811da61170b5f679c641bbb73e242aed4a064117
     steps:
       - name: checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
