@@ -5,7 +5,7 @@ go 1.25.0
 toolchain go1.25.12
 
 require (
-	github.com/oapi-codegen/runtime v1.5.0
+	github.com/oapi-codegen/runtime v1.6.0
 	github.com/quasilyte/go-ruleguard/dsl v0.3.23
 	github.com/stretchr/testify v1.11.1
 )
