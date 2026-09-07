@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.5](https://github.com/grafana/gsm-api-go-client/compare/v0.3.4...v0.3.5) (2026-08-27)
+
+
+### Miscellaneous Chores
+
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.46.0 ([#149](https://github.com/grafana/gsm-api-go-client/issues/149)) ([cb52587](https://github.com/grafana/gsm-api-go-client/commit/cb525870bd3b32dd1b33265eb8b8b22ff65b3b99))
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v1.47.0 ([#155](https://github.com/grafana/gsm-api-go-client/issues/155)) ([e24841d](https://github.com/grafana/gsm-api-go-client/commit/e24841d9107e9316cd698ce998ca71733ebf7eb1))
+* Update go toolchain directive to v1.25.13 [SECURITY] ([#150](https://github.com/grafana/gsm-api-go-client/issues/150)) ([46719f5](https://github.com/grafana/gsm-api-go-client/commit/46719f5cadc492afad458e57cf1daa08b1b7e0f1))
+* Update module github.com/oapi-codegen/runtime to v1.7.0 ([#152](https://github.com/grafana/gsm-api-go-client/issues/152)) ([eb61868](https://github.com/grafana/gsm-api-go-client/commit/eb6186809b6d07798d01bd2fb553576421ac9299))
+* Update module github.com/stretchr/testify to v1.12.1 ([#151](https://github.com/grafana/gsm-api-go-client/issues/151)) ([335a921](https://github.com/grafana/gsm-api-go-client/commit/335a9212e9d06af20c18c0a7cec72fe003901c4f))
+
 ## [0.3.4](https://github.com/grafana/gsm-api-go-client/compare/v0.3.3...v0.3.4) (2026-07-27)
 
 
