@@ -2,7 +2,7 @@ module github.com/grafana/gsm-api-go-client
 
 go 1.25.0
 
-toolchain go1.25.13
+toolchain go1.26.9
 
 require (
 	github.com/oapi-codegen/runtime v1.7.0
