@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.8](https://github.com/grafana/gsm-api-go-client/compare/v0.3.7...v0.3.8) (2026-11-05)
+
+
+### Miscellaneous Chores
+
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v2 ([#166](https://github.com/grafana/gsm-api-go-client/issues/166)) ([2d0a042](https://github.com/grafana/gsm-api-go-client/commit/2d0a0423e4f7303b8c302fe19a589d97070e2c86))
+
 ## [0.3.7](https://github.com/grafana/gsm-api-go-client/compare/v0.3.6...v0.3.7) (2026-11-03)
 
 
