@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Grafana Labs.
+// Copyright (C) 2026 Grafana Labs.
 // SPDX-License-Identifier: Apache-2.0
 
 package main
@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	gsmClient "github.com/grafana/gsm-api-go-client"
 )
@@ -46,10 +47,10 @@ func main() {
 
 	case resp.HTTPResponse.StatusCode == http.StatusCreated:
 		// The secret was created, so JSON201 is populated.
-		log.Println("Secret ID:", resp.JSON201.Uuid)
+		log.Printf("Secret ID: %s\n", resp.JSON201.Uuid.String()) //nolint:gosec // the string is safe
 
 	default:
-		log.Fatalf("Cannot add secret: %s", resp.HTTPResponse.Status)
+		log.Fatalf("Cannot add secret: %s", strconv.Quote(resp.HTTPResponse.Status))
 	}
 
 	// do something with the response
