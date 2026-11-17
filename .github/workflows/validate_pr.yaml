@@ -89,7 +89,7 @@ jobs:
         if: steps.find-dockerfile.outputs.found == 'true'
         with:
           push: false
-          registries: dockerhub
+          registries: gar
           platforms: |-
             ${{ steps.id-platform.outputs.platform }}
           tags: |-
