@@ -3,7 +3,7 @@ module github.com/grafana/gsm-api-go-client
 go 1.27.3
 
 require (
-	github.com/oapi-codegen/runtime v1.8.0
+	github.com/oapi-codegen/runtime v1.9.0
 	github.com/quasilyte/go-ruleguard/dsl v0.3.23
 	github.com/stretchr/testify v1.12.1
 )
