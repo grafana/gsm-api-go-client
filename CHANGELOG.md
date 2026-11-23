@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.9](https://github.com/grafana/gsm-api-go-client/compare/v0.3.8...v0.3.9) (2026-11-17)
+
+
+### Miscellaneous Chores
+
+* Update ghcr.io/grafana/grafana-build-tools Docker tag to v2.0.1 ([#169](https://github.com/grafana/gsm-api-go-client/issues/169)) ([1d58a60](https://github.com/grafana/gsm-api-go-client/commit/1d58a6038144fc3d9dda88187bed258439bbf15c))
+* Update module github.com/oapi-codegen/runtime to v1.9.0 ([#170](https://github.com/grafana/gsm-api-go-client/issues/170)) ([babef2a](https://github.com/grafana/gsm-api-go-client/commit/babef2a45744e7c00fb9d524ef9ea0b0e2c69ba3))
+
 ## [0.3.8](https://github.com/grafana/gsm-api-go-client/compare/v0.3.7...v0.3.8) (2026-11-05)
 
 
