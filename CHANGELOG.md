@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.10](https://github.com/grafana/gsm-api-go-client/compare/v0.3.9...v0.3.10) (2026-11-27)
+
+
+### Miscellaneous Chores
+
+* unify CODEOWNERS to @grafana/synthetic-monitoring-dev ([#174](https://github.com/grafana/gsm-api-go-client/issues/174)) ([57b9565](https://github.com/grafana/gsm-api-go-client/commit/57b95659139cfaf3aeed69accfeb3378b01c073e))
+
 ## [0.3.9](https://github.com/grafana/gsm-api-go-client/compare/v0.3.8...v0.3.9) (2026-11-17)
 
 
